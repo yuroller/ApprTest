@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="model">
+      <UniqueIdentifier>{8704c352-c1ff-40d5-951e-85b0835fd4d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{6eef916a-15b3-4dcb-8e47-c8d60e20ae78}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="model\Discount.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\Offer.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\Product.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\ProductQuantity.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\Receipt.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\ReceiptItem.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\ReceiptPrinter.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\ShoppingCart.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\Teller.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="FakeCatalog.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="SuperMarketTest.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="model\Discount.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\Offer.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\Product.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\ProductQuantity.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\ProductUnit.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\Receipt.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\ReceiptItem.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\ReceiptPrinter.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\ShoppingCart.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\SpecialOfferType.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\SupermarketCatalog.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\Teller.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="FakeCatalog.h">
+      <Filter>test</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
