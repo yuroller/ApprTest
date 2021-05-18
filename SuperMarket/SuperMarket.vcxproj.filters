@@ -7,6 +7,9 @@
     <Filter Include="test">
       <UniqueIdentifier>{6eef916a-15b3-4dcb-8e47-c8d60e20ae78}</UniqueIdentifier>
     </Filter>
+    <Filter Include="doc">
+      <UniqueIdentifier>{15e5e536-e54e-4cd3-8ff5-07ff7c047916}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="model\Discount.cpp">
@@ -86,5 +89,10 @@
     <ClInclude Include="FakeCatalog.h">
       <Filter>test</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="note.txt">
+      <Filter>doc</Filter>
+    </Text>
   </ItemGroup>
 </Project>

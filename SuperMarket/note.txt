@@ -1,0 +1,83 @@
+# Note a Supermarket receipt kata
+
+
+## Generale
+
+I prezzi sono di tipo double: errori arrorondamenti
+
+
+## SuperMarketTest
+
+Nome test inefficace: sembra indicare che stiamo testando lo sconto del 10%
+Troppi REQUIRE: ottimo candidato per ApprovalTest
+
+
+## FakeCatalog
+
+Usa due mappe separate con stessa chiave: meglio una sola
+mappa con valore (Product,Price)
+
+
+## SupermarketCatalog
+
+Manca il distruttore virtuale
+
+
+## SpecialOfferType
+
+Dovrebbe indicare il tipo di offerta (algoritmo da usare),
+ma ci sono duplicazioni: TwoForAmount e FiveForAmount usano lo stesso algoritmo QtyForAmount
+
+enum class SpecialOfferType {
+    BuyXGetY,
+    PercentDiscount,
+    QtyForAmount,
+};
+
+Il costruttore di default lascia offerType e argument non inizializzati
+
+
+## Product
+
+Perché ci sono gli operatori di confronto per ordinare su name e unit?
+Forse bastano != e == : non è responsabilità
+della classe stabilire l'ordine delle voci sullo scontrino
+Il costruttore di default lascia unit non inizializzato
+
+
+## ReceiptItem
+
+Da code coverage, sembra che gli operatori di confronto non vengano usati
+totalPrice può essere calcolato da quantity e price?
+Il costruttore prende 3 parametri double: facile sbagliare ordine
+
+
+## Receipt
+
+addProduct() prende argomenti per creare receiptItem, mentre getItems() ritorna dei ReceiptItem: incongruenza
+
+
+## Discount
+
+Per come viene usato in Receipt, discountAmount deve essere negativo
+
+
+## ShoppingCart
+
+I membri dati sono vector<ProductQuantity> e una map chiamata productQuantities: duplicazione?
+Il vector mantiene l'ordine di inserimento e uno stesso product può comparire più volte;
+la map contiene la quantità aggregata per i Product.
+La map productQuantities viene usata solo per applicare gli sconti, quindi conviene costruirla al momento
+La forward reference addItemQuantity() non viene usata: rimuovere
+un ramo dell'if di addItemQuantity() viene preso quando si aggiunge uno stesso Product più volte
+handleOffers() fa troppe cose e contiene tutti gli algoritmi per le offerte speciali:
+magari conviene creare una gerarchia di classi contenenti gli algoritmi delle offerte speciali.
+
+
+## ReceiptPrinter
+
+Il membro dato columns essendo const, rende la classe non copiabile
+Il file cpp è vuoto: tutta l'implementazione è nello header
+Invece di fare append su string, usare uno stringstream
+
+
