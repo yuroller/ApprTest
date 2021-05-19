@@ -6,10 +6,12 @@
 #include "FakeCatalog.h"
 #include "model/ShoppingCart.h"
 #include "model/Teller.h"
+#include "model/ReceiptPrinter.h"
+
 
 using namespace ApprovalTests;
 
-TEST_CASE("TenPercentDiscount", "[Supermarket]")
+TEST_CASE("SingleProductReceipt", "[Supermarket]")
 {
     // ARRANGE
     SupermarketCatalog *catalog = new FakeCatalog();
@@ -26,16 +28,19 @@ TEST_CASE("TenPercentDiscount", "[Supermarket]")
     // ACT
     Receipt receipt = teller.checksOutArticlesFrom(cart);
 
-    // ASSERT
-    REQUIRE(4.975 == receipt.getTotalPrice());
-    REQUIRE(receipt.getDiscounts().empty());
-    REQUIRE(1 == receipt.getItems().size());
-    ReceiptItem receiptItem = receipt.getItems()[0];
-    REQUIRE(apples == receiptItem.getProduct());
-    REQUIRE(1.99 == receiptItem.getPrice());
-    REQUIRE(2.5 * 1.99 == receiptItem.getTotalPrice());
-    REQUIRE(2.5 == receiptItem.getQuantity());
+    //// ASSERT
+    //REQUIRE(4.975 == receipt.getTotalPrice());
+    //REQUIRE(receipt.getDiscounts().empty());
+    //REQUIRE(1 == receipt.getItems().size());
+    //ReceiptItem receiptItem = receipt.getItems()[0];
+    //REQUIRE(apples == receiptItem.getProduct());
+    //REQUIRE(1.99 == receiptItem.getPrice());
+    //REQUIRE(2.5 * 1.99 == receiptItem.getTotalPrice());
+    //REQUIRE(2.5 == receiptItem.getQuantity());
 
+    // Print Compare/Approve
+    ReceiptPrinter printer;
+    Approvals::verify(printer.printReceipt(receipt));
 }
 
 
