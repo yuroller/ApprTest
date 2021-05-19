@@ -19,13 +19,18 @@ TEST_CASE("SingleProductReceipt", "[Supermarket]")
     catalog->addProduct(toothbrush, 0.99);
     Product apples("apples", ProductUnit::Kilo);
     catalog->addProduct(apples, 1.99);
+    Product soap("soap", ProductUnit::Each);
+    catalog->addProduct(soap, 0.59);
+
     Teller teller(catalog);
     teller.addSpecialOffer(SpecialOfferType::TenPercentDiscount, toothbrush, 10.0);
+    teller.addSpecialOffer(SpecialOfferType::ThreeForTwo, soap, 0.0);
 
     ShoppingCart cart;
     cart.addItem(toothbrush);
     cart.addItemQuantity(apples, 2.5);
     cart.addItem(toothbrush);
+    cart.addItemQuantity(soap, 3);
 
     // ACT
     Receipt receipt = teller.checksOutArticlesFrom(cart);
