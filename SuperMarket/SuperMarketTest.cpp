@@ -23,6 +23,7 @@ TEST_CASE("SingleProductReceipt", "[Supermarket]")
     teller.addSpecialOffer(SpecialOfferType::TenPercentDiscount, toothbrush, 10.0);
 
     ShoppingCart cart;
+    cart.addItem(toothbrush);
     cart.addItemQuantity(apples, 2.5);
     cart.addItem(toothbrush);
 
