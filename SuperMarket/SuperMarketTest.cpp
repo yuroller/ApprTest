@@ -24,19 +24,10 @@ TEST_CASE("SingleProductReceipt", "[Supermarket]")
 
     ShoppingCart cart;
     cart.addItemQuantity(apples, 2.5);
+    cart.addItem(toothbrush);
 
     // ACT
     Receipt receipt = teller.checksOutArticlesFrom(cart);
-
-    //// ASSERT
-    //REQUIRE(4.975 == receipt.getTotalPrice());
-    //REQUIRE(receipt.getDiscounts().empty());
-    //REQUIRE(1 == receipt.getItems().size());
-    //ReceiptItem receiptItem = receipt.getItems()[0];
-    //REQUIRE(apples == receiptItem.getProduct());
-    //REQUIRE(1.99 == receiptItem.getPrice());
-    //REQUIRE(2.5 * 1.99 == receiptItem.getTotalPrice());
-    //REQUIRE(2.5 == receiptItem.getQuantity());
 
     // Print Compare/Approve
     ReceiptPrinter printer;
