@@ -6,9 +6,12 @@ soap                                1.77
   0.59 * 3
 shampoo                             2.38
   1.19 * 2
+dental floss                       12.45
+  2.49 * 5
+5 for 10.000000(dental floss)      -2.45
 2 for 2.000000(shampoo)            -0.38
 3 for 2(soap)                      -0.59
 10.000000% off(toothbrush)         -0.20
 
-Total:                              9.94
+Total:                             19.94
 
