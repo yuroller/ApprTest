@@ -4,8 +4,11 @@ apples                              4.97
 toothbrush                          0.99
 soap                                1.77
   0.59 * 3
+shampoo                             2.38
+  1.19 * 2
+2 for 2.000000(shampoo)            -0.38
 3 for 2(soap)                      -0.59
 10.000000% off(toothbrush)         -0.20
 
-Total:                              7.94
+Total:                              9.94
 
