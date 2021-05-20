@@ -1,21 +1,9 @@
 #include "Offer.h"
 
-Offer::Offer(const SpecialOfferType& offerType, const Product& product, double argument)
-        : offerType(offerType), product(product), argument(argument) {}
+PercentDiscountOffer::PercentDiscountOffer(const Product& product, double percentDiscount)
+    : product(product), percentDiscount(percentDiscount) {}
 
-SpecialOfferType Offer::getOfferType() const {
-        return offerType;
-}
-
-Product Offer::getProduct() const {
-        return product;
-}
-
-double Offer::getArgument() const {
-        return argument;
-}
-
-Discount* Offer::handleOffer(SupermarketCatalog* catalog, const std::map<Product, double>& productQuantities)
+Discount* PercentDiscountOffer::handleOffer(SupermarketCatalog* catalog, const std::map<Product, double>& productQuantities)
 {
     const auto& productQuantity = productQuantities.find(product);
     if (productQuantity == productQuantities.end())
@@ -23,31 +11,52 @@ Discount* Offer::handleOffer(SupermarketCatalog* catalog, const std::map<Product
 
     double quantity = productQuantity->second;
     double unitPrice = catalog->getUnitPrice(product);
+
+    return new Discount(std::to_string(percentDiscount) + "% off", -quantity * unitPrice * percentDiscount / 100.0, product);
+}
+
+
+BuyXQtyPayYQtyOffer::BuyXQtyPayYQtyOffer(const Product& product, int x, int y)
+    : product(product), x(x), y(y) {}
+
+Discount* BuyXQtyPayYQtyOffer::handleOffer(SupermarketCatalog* catalog, const std::map<Product, double>& productQuantities)
+{
+    const auto& productQuantity = productQuantities.find(product);
+    if (productQuantity == productQuantities.end())
+        return nullptr;
+
+    double quantity = productQuantity->second;
     int quantityAsInt = (int)quantity;
-    Discount* discount = nullptr;
-    int x = 1;
 
-    if (offerType == SpecialOfferType::ThreeForTwo) {
-        x = 3;
-    }
-    else if (offerType == SpecialOfferType::TwoForAmount) {
-        x = 2;
-    } if (offerType == SpecialOfferType::FiveForAmount) {
-        x = 5;
-    }
+    if (quantityAsInt < x)
+        return nullptr;
+
+    double unitPrice = catalog->getUnitPrice(product);
     int numberOfXs = quantityAsInt / x;
-    if (offerType == SpecialOfferType::ThreeForTwo && quantityAsInt > 2) {
-        double discountAmount = quantity * unitPrice - ((numberOfXs * 2 * unitPrice) + quantityAsInt % 3 * unitPrice);
-        discount = new Discount("3 for 2", -discountAmount, product);
-    }
-    if (offerType == SpecialOfferType::TenPercentDiscount) {
-        discount = new Discount(std::to_string(argument) + "% off", -quantity * unitPrice * argument / 100.0, product);
-    }
-    if ((offerType == SpecialOfferType::TwoForAmount || offerType == SpecialOfferType::FiveForAmount)
-        && quantityAsInt >= x) {
-        double discountTotal = unitPrice * quantity - (argument * numberOfXs + quantityAsInt % x * unitPrice);
-        discount = new Discount(std::to_string(x) + " for " + std::to_string(argument), -discountTotal, product);
-    }
 
-    return discount;    
+    double discountAmount = quantity * unitPrice - ((numberOfXs * y * unitPrice) + quantityAsInt % x * unitPrice);
+    return new Discount(std::to_string(x) + " for " + std::to_string(y), -discountAmount, product);
+}
+
+
+BuyXQtyPayAmountOffer::BuyXQtyPayAmountOffer(const Product& product, int x, double amount)
+    : product(product), x(x), amount(amount) {}
+
+Discount* BuyXQtyPayAmountOffer::handleOffer(SupermarketCatalog* catalog, const std::map<Product, double>& productQuantities)
+{
+    const auto& productQuantity = productQuantities.find(product);
+    if (productQuantity == productQuantities.end())
+        return nullptr;
+
+    double quantity = productQuantity->second;
+    int quantityAsInt = (int)quantity;
+
+    if (quantityAsInt < x)
+        return nullptr;
+
+    double unitPrice = catalog->getUnitPrice(product);
+    int numberOfXs = quantityAsInt / x;
+
+    double discountTotal = unitPrice * quantity - (amount * numberOfXs + quantityAsInt % x * unitPrice);
+    return new Discount(std::to_string(x) + " for " + std::to_string(amount), -discountTotal, product);
 }

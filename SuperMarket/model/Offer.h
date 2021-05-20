@@ -11,21 +11,37 @@
 class Offer {
 public:
     Offer() = default;
-    Offer(const SpecialOfferType& offerType, const Product& product, double argument);
+    virtual ~Offer() = default;
+    virtual Discount* handleOffer(SupermarketCatalog* catalog, const std::map<Product, double>& productQuantities) = 0;
+};
 
-    SpecialOfferType getOfferType() const;
-
-    Product getProduct() const;
-
-    double getArgument() const;
-
-    Discount* handleOffer(SupermarketCatalog* catalog, const std::map<Product, double>& productQuantities);
-
+class PercentDiscountOffer : public Offer {
+public:
+    PercentDiscountOffer(const Product& product, double percentDiscount);
+    Discount* handleOffer(SupermarketCatalog* catalog, const std::map<Product, double>& productQuantities) override;
 private:
-    SpecialOfferType offerType;
     Product product;
-    double argument;
+    double percentDiscount;
+};
 
+class BuyXQtyPayYQtyOffer : public Offer {
+public:
+    BuyXQtyPayYQtyOffer(const Product& product, int x, int y);
+    Discount* handleOffer(SupermarketCatalog* catalog, const std::map<Product, double>& productQuantities) override;
+private:
+    Product product;
+    int x;
+    int y;
+};
+
+class BuyXQtyPayAmountOffer : public Offer {
+public:
+    BuyXQtyPayAmountOffer(const Product& product, int x, double amount);
+    Discount* handleOffer(SupermarketCatalog* catalog, const std::map<Product, double>& productQuantities) override;
+private:
+    Product product;
+    int x;
+    double amount;
 };
 
 

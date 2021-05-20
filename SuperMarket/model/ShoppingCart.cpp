@@ -21,12 +21,11 @@ void ShoppingCart::addItemQuantity(const Product& product, double quantity) {
     }
 }
 
-void ShoppingCart::handleOffers(Receipt& receipt, std::map<Product, Offer> offers, SupermarketCatalog* catalog) {
+void ShoppingCart::handleOffers(Receipt& receipt, std::map<Product, std::unique_ptr<Offer>> &offers, SupermarketCatalog* catalog) {
     for (const auto& productQuantity : productQuantities) {
         Product product = productQuantity.first;
         if (offers.find(product) != offers.end()) {
-            auto offer = offers[product];
-            Discount* discount = offer.handleOffer(catalog, productQuantities);
+            Discount* discount = offers[product]->handleOffer(catalog, productQuantities);
             if (discount != nullptr)
                 receipt.addDiscount(*discount);
         }

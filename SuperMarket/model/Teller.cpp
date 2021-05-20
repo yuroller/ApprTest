@@ -3,7 +3,23 @@
 Teller::Teller(SupermarketCatalog *catalog) : catalog(catalog) {}
 
 void Teller::addSpecialOffer(SpecialOfferType offerType, const Product& product, double argument) {
-    offers[product] = Offer(offerType, product, argument);
+    auto offer = [&]() -> Offer* {
+        switch (offerType) {
+        case SpecialOfferType::ThreeForTwo:
+            return new BuyXQtyPayYQtyOffer(product, 3, 2);
+        case SpecialOfferType::TenPercentDiscount:
+            return new PercentDiscountOffer(product, argument);
+        case SpecialOfferType::TwoForAmount:
+            return new BuyXQtyPayAmountOffer(product, 2, argument);
+        case SpecialOfferType::FiveForAmount:
+            return new BuyXQtyPayAmountOffer(product, 5, argument);
+        }
+
+        return nullptr;
+    }();
+    
+    if (offer != nullptr)
+        offers.emplace(product, offer);
 }
 
 Receipt Teller::checksOutArticlesFrom(ShoppingCart theCart) {

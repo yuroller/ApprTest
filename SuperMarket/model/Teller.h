@@ -3,10 +3,12 @@
 
 
 #include <map>
+#include <memory>
 #include "SupermarketCatalog.h"
 #include "Offer.h"
 #include "Receipt.h"
 #include "ShoppingCart.h"
+#include "SpecialOfferType.h"
 
 class Teller {
 public:
@@ -18,7 +20,7 @@ public:
 
 private:
     SupermarketCatalog* catalog;
-    std::map<Product, Offer> offers;
+    std::map<Product, std::unique_ptr<Offer>> offers;
 };
 
 
