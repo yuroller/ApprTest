@@ -4,23 +4,318 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Test di approvazione in C++</title>
 
 		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
 
 		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<h2>Test di approvazione in C++</h2>
+					<ul>
+						<li>Yuri Valentini</li>
+						<li>Modena</li>
+						<li>20 Maggio 2021</li>
+						<li>Meetup C++ (online)</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Sommario</h2>
+					<ul>
+						<li>Episodi precedenti</li>
+						<li><a href="https://github.com/approvals/ApprovalTests.cpp">ApprovalTests.cpp</a></li>
+						<li>Concetti e differenze da Unit Test</li>
+						<li>Refactoring kata</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Yuri Valentini</h2>
+					<ul>
+						<li>Sviluppo Windows, Linux, iOS, Android</li>
+						<li>C/C++, C#, Python, Dart/Flutter</li>
+						<li>Videoconferenza e VOIP</li>
+						<li>yuroller [at] gmail.com</li>
+						<li><a href="https://github.com/yuroller">https://github.com/yuroller</a></li>						
+					</ul>
+				</section>
+				<section>
+					<h2>Puntate precedenti</h2>
+					<ul>
+						<li>Test del codice con Google Test (15/3/18)</li>
+						<li>Mocking &amp; Testing con Google Mock (19/4/18)</li>
+						<li>Test basati su propriet&agrave; con rapidcheck (9/4/20)</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Unit Test con Google Test</h2>
+					<pre><code class="c++">TEST(DeepThoughtTest, ChecksJobIsStarted) {
+  // Arrange
+  auto computer = DeepThought();
+
+  // Act
+  auto state = computer.calculateAnswer();
+
+  // Assert
+  EXPECT_EQ(&quot;processing&quot;, state);
+}</code></pre>					
+				</section>
+				<section>
+					<h2>BDD con Google Mock 1</h2>
+					<pre><code class="c++">TEST(JobRunnerTest, WaitsForComputationToFinsh) {
+  // Create and configure mock
+  auto computer = MockComputer();
+  ON_CALL(computer, getAnswer())
+    .WillByDefault(Return(42));
+  EXPECT_CALL(computer, calculateAnswer())
+    .WillOnce(Return(&quot;complete&quot;));
+
+  // Test JobRunner
+  auto runner = JobRunner(computer);
+  auto result = runner.waitForAnswer();
+  EXPECT_EQ(42, result);
+  // call to calculateAnswer() is checked
+}</code></pre>
+				</section>
+				<section>
+					<h2>BDD con Google Mock 2</h2>
+					<pre><code class="c++">class Computer {
+public:
+  virtual ~Computer() {}
+  virtual int getAnswer() const = 0;
+  virtual std::string calculateAnswer() = 0;
+};
+
+class MockComputer : public Computer {
+public:
+  MOCK_METHOD(int, getAnswer, (), (const, override));
+  MOCK_METHOD(std::string, calculateAnswer, (), (override));
+};</code></pre>
+				</section>
+				<section>
+					<h2>Test propriet&agrave; con rapidcheck</h2>
+					<pre><code class="c++">void propertyTest() {
+  rc::check("double reversal yields the original value",
+    [](const std::vector&lt;int&gt; &amp;l0) {
+      auto l1 = l0;
+      std::reverse(std::begin(l1), std::end(l1));
+      std::reverse(std::begin(l1), std::end(l1));
+      RC_ASSERT(l0 == l1); // return l0 == l1;
+  });
+}</code></pre>
+				</section>
+				<section>
+					<h2>Diamond kata</h2>
+					<pre>			"  A  "
+			" B B "
+			"C   C"
+			" B B "
+			"  A  "</pre>
+					<pre><code class="c++">	std::vector&lt;std::string&gt; crea_rombo(char l);</code></pre>
+				</section>
+				<section>
+					<h2>Diamond - propriet&agrave;</h2>
+					<ul>
+						<li>Numero di righe dispari</li>
+						<li>Prima e ultima riga contengono A</li>
+						<li>Tutte le righe hanno un contorno simmetrico</li>
+						<li>Prima lettera in pattern AB..l..BA</li>
+						<li>Altezza == Larghezza</li>
+						<li>2 lettere uguali in ogni riga, non la prima e l'ultima</li>
+						<li>0,1,2.. spazi iniziali nella met&agrave; inferiore</li>
+						<li>Simmetria orizzontale</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Test di approvazione</h2>
+					<ul>
+						<li><a href="https://approvaltestscpp.readthedocs.io/en/latest/">ApprovalTests.cpp</a></li>
+						<li><a href="https://github.com/claremacrae">Clare Macrae</a> al prossimo Italian C++</li>
+						<li>Libreria header-only</li>
+						<li>Framework di test (es. gtest, catch2)</li>
+						<li>Strumento confronto testi (es. <a href="https://winmerge.org/">WinMerge</a>)</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Esempio</h2>
+					<pre><code class="c++">#include "ApprovalTests.hpp"
+#include "catch2/catch.hpp"
+using namespace ApprovalTests;
+TEST_CASE("DeepToughAnswerFor6And7")
+{
+  // Arrange
+  auto computer = DeepTough(6, 7);
+  // Act
+  auto answer = computer.getAnswer();
+  // Print 'actual' value
+  auto received = std::to_string(answer);
+  // Verify received with approved ('expected') text
+  Approvals::verify(received);
+}</code></pre>
+				</section>
+				<section>
+					<h2>Cosa succede?</h2>
+					<ol>
+						<li>scrive 'received' in <pre>[NomeFileCpp].[NomeTest].received.txt</pre></li>
+						<li>confronta con il testo approvato in <pre>[NomeFileCpp].[NomeTest].approved.txt</pre></li>
+						<ul>
+							<li>se differenti &rightarrow; strumento diff e <span style="color:red">test fallito</span></li>
+							<li>se uguali &rightarrow; <span style="color:green">test riuscito</span></li>
+						</ul>
+					</ol>
+				</section>
+				<section>
+					<h2>main.cpp</h2>
+					<pre><code class="c++">#define APPROVALS_CATCH
+#include "ApprovalTests.hpp"
+#include &lt;memory&gt;
+
+using namespace ApprovalTests;
+auto defaultReporterDisposer = // RAII
+  Approvals::useAsDefaultReporter(
+    std::make_shared&lt;Windows::WinMergeReporter&gt;());</code></pre>
+				</section>
+				<section>
+					<h2>DemoTest</h2>
+					<ul>
+						<li>flusso di lavoro</li>
+						<li>funzioni:<pre>verify()
+verifyAll()
+verifyAllCombinations()</pre></li>
+						<li>stampa di oggetti</li>
+						<li>regex scrubber</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Nomenclatura</h2>
+					<ul>
+						<li>Approval test</li>
+						<li>Golden Master test</li>
+						<li>Characterization test</li>
+						<li>Snapshot test</li>						
+					</ul>
+					<p><a href="http://coding-is-like-cooking.info/2021/03/">Emily Bache post sui nomi</a></p>
+
+				</section>
+				<section>
+					<h2>Formato TestCase</h2>
+					<ol>
+						<li>Arrange</li>
+						<li>Act</li>
+						<li><del>Assert</del> Print/Compare</li>
+					</ol>
+					<p>L'output approvato va in git/svn/...</p>
+				</section>
+				<section>
+					<h2>Terminologia</h2>
+					<ul>
+						<li><del>Actual</del> Received</li>
+						<li><del>Expected</del> Approved</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Confronto di cose</h2>
+					<ul>
+						<li>supporto diretto per testo</li>
+						<li>estensibile per
+							<ul>
+								<li>oggetti binari (es. protobuf)</li>
+								<li>immagini</li>
+								<li>suoni</li>
+							</ul>
+						</li>
+					</ul>
+					<p><a href="https://youtu.be/3GZHvcdq32s?t=2912">Clare Macrae confronta immagini</a></p>
+				</section>
+				<section>
+					<h2>Scrubber</h2>
+					<ul>
+						<li>Utili per confronto di json o xml</li>
+						<li>Tolgono dipendenza da formattazione</li>
+						<li>Rendono il confronto deterministico</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Quando usare Approval? 1/2</h2>
+					<ul>
+						<li>Codice legacy (e funzionante)</li>
+						<li>Codice difficile da capire</li>
+						<li>Grandi refactoring evitando regressioni</li>
+						<li>Codice che produce output testuale:
+							<ul>
+								<li>log/trace file</li>
+								<li>output a console</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Quando usare Approval? 2/2</h2>
+					<ul>
+						<li>Test nei loop esterni (es. integration test)</li>
+						<li>In sostituzione di ASSERT multipli</li>
+						<li>Passo intermedio per unit test tradizionale</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Refactoring kata</h2>
+					<ul>
+						<li>Esercizio di programmazione</li>
+						<li>Spesso con codice legacy</li>
+						<li>Migliorare il design</li>
+						<li>Aggiungere funzionalit&agrave;</li>
+						<li>In modo sicuro</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Refactoring kata</h2>
+					<ol>
+						<li>Estrazione di pezzo piccolo di codice
+							<ul>
+								<li>presumo pochi comportamenti</li>
+								<li>in genere pi&ugrave; grande che per gli unit test</li>
+							</ul>
+						</li>
+						<li>Guardare come &egrave; fatto</li>
+						<li>Scrivere test con input adatto</li>
+						<li>Approvare output</li>
+						<li>Apportare cambiamenti</li>
+						<li>Verificare stesso output</li>
+					</ol>
+				</section>
+				<section>
+					<h2><a href="https://github.com/emilybache/SupermarketReceipt-Refactoring-Kata">Supermarket Receipt</a></h2>
+					<ul>
+						<li>Stampa scontrino supermercato (testo)</li>
+						<li>Codice legacy (pochi test) </li>
+						<li>Prodotti con prezzi e quantit&agrave;</li>
+						<li>Preservare formato di stampa</li>
+						<li>Aggiungere gestione offerte bundle</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Code coverage</h2>
+					<ul>
+						<li><a href="https://github.com/OpenCppCoverage/OpenCppCoveragePlugin">OpenCppCoverage</a></li>
+						<li>Quantit&agrave; di codice esplorato dai test</li>
+						<li>Indica dove porre l'attenzione</li>
+						<li>Aiuta a trovare codice morto</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Domande?</h2>
+				</section>
+				<section>
+					<h2>Grazie</h2>
+					<p><a href="https://github.com/yuroller">https://github.com/yuroller</a></p>
+				</section>
 			</div>
 		</div>
-
 		<script src="dist/reveal.js"></script>
 		<script src="plugin/notes/notes.js"></script>
 		<script src="plugin/markdown/markdown.js"></script>
